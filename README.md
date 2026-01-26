@@ -26,11 +26,11 @@ business outcomes. This project demonstrates a simple but powerful idea:
 ---
 
 ## 🧱 Project Structure
-|
-|-frontend/ → Rapid UI prototype (React + Vite)
-|-backend/ → Reference backend logic (Python)
-|-data/ → CSV-based demo ledger
-|-schema.sql → Conceptual database schema
+|<br>
+|-frontend/ → Rapid UI prototype (React + Vite) <br>
+|-backend/ → Reference backend logic (Python)<br>
+|-data/ → CSV-based demo ledger<br>
+|-schema.sql → Conceptual database schema<br>
 
 
 ---
