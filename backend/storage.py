@@ -1,3 +1,14 @@
+"""
+CSV-based ledger storage for the AI ROI Ledger.
+
+Design choices:
+- CSV for transparency and auditability
+- No external database dependency
+- Append-only writes for events, KPIs, and outcomes
+
+This is intentional for early-stage ROI tracking systems.
+"""
+
 import csv
 import os
 
