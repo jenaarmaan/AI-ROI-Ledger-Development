@@ -1,18 +1,34 @@
 import { useEffect, useState } from "react";
-import { calculateROI } from "../lib/roiCalculations";
 
 type Event = {
-  id: string;
-  useCase: string;
-  aiCostUsd: number;
+  event_id: string;
+  use_case: string;
+  roi: number | null;
+  status: string;
 };
 
 export default function ROIDashboard() {
   const [events, setEvents] = useState<Event[]>([]);
 
   useEffect(() => {
-    const stored = JSON.parse(localStorage.getItem("events") || "[]");
-    setEvents(stored);
+    async function refreshData() {
+      try {
+        const response = await fetch("http://localhost:8000/weekly_report");
+        if (response.ok) {
+          const data = await response.json();
+          // Flatten all reports into one list for the simple dashboard
+          const allEvents = [
+            ...(data.top_positive || []),
+            ...(data.bottom_negative || []),
+            ...(data.unknown || [])
+          ];
+          setEvents(allEvents);
+        }
+      } catch (err) {
+        console.error("Failed to fetch ROI report:", err);
+      }
+    }
+    refreshData();
   }, []);
 
   return (
@@ -24,16 +40,14 @@ export default function ROIDashboard() {
       )}
 
       <ul className="list">
-        {events.map((e) => {
-          const result = calculateROI(e.aiCostUsd);
-
-          return (
-            <li key={e.id} className={`row ${result.status.toLowerCase()}`}>
-              <span>{e.useCase}</span>
-              <span className="status">{result.status}</span>
-            </li>
-          );
-        })}
+        {events.map((e) => (
+          <li key={e.event_id} className={`row ${e.status.toLowerCase()}`}>
+            <span>{e.use_case}</span>
+            <span className="status">
+              {e.status} {e.roi !== null ? `($${e.roi.toFixed(2)})` : ""}
+            </span>
+          </li>
+        ))}
       </ul>
     </section>
   );

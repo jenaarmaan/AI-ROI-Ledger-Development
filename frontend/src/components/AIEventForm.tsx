@@ -4,21 +4,36 @@ export default function AIEventForm() {
   const [useCase, setUseCase] = useState("");
   const [aiCost, setAiCost] = useState("");
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    const events = JSON.parse(localStorage.getItem("events") || "[]");
+    const event = {
+      event_id: crypto.randomUUID(),
+      timestamp: new Date().toISOString(),
+      user: "demo_user",
+      team: "finance_ai",
+      use_case: useCase,
+      model_name: "gpt-4-mock",
+      tokens_used: 1500,
+      estimated_cost_usd: Number(aiCost),
+      execution_time_sec: 2
+    };
 
-    events.push({
-      id: crypto.randomUUID(),
-      useCase,
-      aiCostUsd: Number(aiCost),
-    });
+    try {
+      const response = await fetch("http://localhost:8000/log_event", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(event),
+      });
 
-    localStorage.setItem("events", JSON.stringify(events));
-
-    setUseCase("");
-    setAiCost("");
+      if (response.ok) {
+        setUseCase("");
+        setAiCost("");
+        window.location.reload(); // Refresh to update dashboard
+      }
+    } catch (err) {
+      console.error("Failed to log event:", err);
+    }
   }
 
   return (

@@ -5,6 +5,7 @@ and generating ROI-based weekly summaries.
 """
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional
 from backend.storage import (
@@ -18,6 +19,15 @@ from backend.storage import (
 from backend.roi import generate_weekly_summary
 
 app = FastAPI(title="AI ROI Ledger")
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # For prototype purposes, allow all. In production, specify the Vite URL.
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 # ---------- Data Models ----------
