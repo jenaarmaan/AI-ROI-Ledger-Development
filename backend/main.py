@@ -1,3 +1,9 @@
+"""
+FastAPI entry point for the AI ROI Ledger backend.
+Provides endpoints for logging AI usage, KPIs, outcomes,
+and generating ROI-based weekly summaries.
+"""
+
 from fastapi import FastAPI
 from pydantic import BaseModel
 from typing import Optional
